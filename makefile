@@ -20,8 +20,18 @@ tag: build
 	docker tag nomic-vision-1.5-api:latest mindthemath/nomic-vision-1.5-api:latest
 	docker images | grep mindthemath/nomic-vision-1.5-api
 
-run:
+run: build
 	docker run --rm -ti \
+	--name embed-image-v1.5 \
+	--gpus all \
+	-p 8030:8000 \
+	-e NUM_API_SERVERS=$(or $(NUM_API_SERVERS),1) \
+	-e MAX_BATCH_SIZE=$(or $(MAX_BATCH_SIZE),1) \
+	-e LOG_LEVEL=$(or $(LOG_LEVEL),INFO) \
+	-e PORT=8000 \
+	nomic-vision-1.5-api:latest
+up: build
+	docker run --restart unless-stopped -d \
 	--name embed-image-v1.5 \
 	--gpus all \
 	-p 8030:8000 \
