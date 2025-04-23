@@ -27,7 +27,8 @@ class NomicVisionAPI(ls.LitAPI):
     def setup(self, device):
         logger.info("Setting up Nomic vision model.")
         self.processor = AutoImageProcessor.from_pretrained(
-            "nomic-ai/nomic-embed-vision-v1.5", use_fast=False,
+            "nomic-ai/nomic-embed-vision-v1.5",
+            use_fast=False,
         )
         self.model = AutoModel.from_pretrained(
             "nomic-ai/nomic-embed-vision-v1.5", trust_remote_code=True
@@ -35,47 +36,50 @@ class NomicVisionAPI(ls.LitAPI):
         self.device = device
         self.model.to(device)
         self.model.eval()
+        self.normalize = True
+        self.dimension = 256
 
     def decode_request(self, request):
         file_obj = request["content"]
-        opts = {}
-        opts['normalize'] = request.get("normalize", False)
-        opts['dimension'] = request.get("dimension", 256)
+        opts = {}  # CURRENTLY UNUSED!
+        opts["normalize"] = request.get("normalize", self.normalize)
+        opts["dimension"] = request.get("dimension", self.dimension)
 
+        if "http" in file_obj:
+            image = Image.open(requests.get(file_obj, stream=True).raw)
+            logger.info("Processing URL input.")
+            return image
         try:
-            logger.info("Processing file input.")
             file_bytes = file_obj.file.read()
             image = Image.open(BytesIO(file_bytes))
-            return image, opts
+            logger.info("Processing file input.")
+            return image
         except AttributeError:
-            if "http" in file_obj:
-                logger.info("Processing URL input.")
-                image = Image.open(requests.get(file_obj, stream=True).raw)
-                return image, opts
+            logger.warning("Faild to process request")
         finally:
             if not isinstance(file_obj, str):
                 file_obj.file.close()
 
-    def predict(self, batch_data):
-        images, opts = batch_data
-        normalize = opts.get("normalize", False)
-        dimension = opts.get("dimension", 768)
-
-        logger.info("Generating image embeddings.")
+    def predict(self, images):
+        logger.info(f"Generating {len(images)} embeddings.")
         inputs = self.processor(images, return_tensors="pt")
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
 
         with torch.no_grad():
             img_emb = self.model(**inputs).last_hidden_state
-            img_embeddings = img_emb[:, 0][:, :dimension]
+            img_embeddings = img_emb[:, 0]
 
+        # Truncate to Matryoshka embedding dimension
+        embedding = img_embeddings[:, : self.dimension]
         # Apply normalization if requested
-        embedding = img_embeddings
-        if normalize:
-            embedding = F.normalize(embedding, p=2, dim=1)
-        return {"embedding": embedding.cpu().numpy().tolist()[0]}
+        logger.debug(f"Embedding shape: {embedding.shape}")
 
-        return results
+        if self.normalize:
+            embedding = F.normalize(embedding, p=2, dim=-1)
+        return embedding.cpu().numpy()
+
+    def encode_response(self, output):
+        return {"embedding": output.tolist()}
 
 
 if __name__ == "__main__":
