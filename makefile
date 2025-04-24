@@ -5,7 +5,7 @@ snowman.png:
 	curl -fsSL https://huggingface.co/microsoft/kosmos-2-patch14-224/resolve/main/snowman.png -o snowman.png
 
 test: snowman.png
-	curl -X POST -F "content=@snowman.png" http://127.0.0.1:8030/embed | jq .embedding[0]
+	curl -X POST -F "content=@snowman.png" http://127.0.0.1:8030/embed | jq .embedding
 
 ptest: snowman.png
 	seq 1 23 | parallel --jobs 24 "curl -X POST -F 'content=@snowman.png' http://127.0.0.1:8030/embed 2>&1 || echo 'Request failed'"
@@ -59,7 +59,7 @@ run: build
 	--gpus all \
 	-p 8030:8000 \
 	-e NUM_API_SERVERS=$(or $(NUM_API_SERVERS),1) \
-	-e MAX_BATCH_SIZE=$(or $(MAX_BATCH_SIZE),1) \
+	-e MAX_BATCH_SIZE=$(or $(MAX_BATCH_SIZE),32) \
 	-e LOG_LEVEL=$(or $(LOG_LEVEL),INFO) \
 	-e PORT=8000 \
 	nomic-vision-1.5-api:latest
@@ -69,8 +69,8 @@ up: build
 	--name embed-image-v1.5 \
 	--gpus all \
 	-p 8030:8000 \
-	-e NUM_API_SERVERS=$(or $(NUM_API_SERVERS),1) \
-	-e MAX_BATCH_SIZE=$(or $(MAX_BATCH_SIZE),1) \
+	-e NUM_API_SERVERS=$(or $(NUM_API_SERVERS),4) \
+	-e MAX_BATCH_SIZE=$(or $(MAX_BATCH_SIZE),32) \
 	-e LOG_LEVEL=$(or $(LOG_LEVEL),INFO) \
 	-e PORT=8000 \
 	nomic-vision-1.5-api:latest
