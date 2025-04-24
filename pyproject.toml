@@ -7,11 +7,22 @@ requires-python = ">=3.11"
 dependencies = [
     "einops>=0.8.0",
     "pillow>=11.0.0",
-    "torch>=2.5.1",
     "transformers>=4.47.1",
 ]
 
 [project.optional-dependencies]
+cpu = [
+    "torch>=2.5.1",
+]
+
+cu121 = [
+    "torch==2.5.1",
+]
+
+cu122 = [
+    "torch>=2.5.1",
+]
+
 api = [
     "litserve>=0.2.5",
     "python-multipart>=0.0.20",
@@ -31,3 +42,33 @@ dev = [
     "ipython>=8.31.0",
     "isort>=5.13.2",
 ]
+
+[tool.uv]
+conflicts = [
+  [
+    { extra = "cpu" },
+    { extra = "cu121" },
+    { extra = "cu122" },
+  ],
+]
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cpu",   extra = "cpu" },
+    { index = "pytorch-cu121", extra = "cu121" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cu121"
+url = "https://download.pytorch.org/whl/cu121"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cu124"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true

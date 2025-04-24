@@ -1,5 +1,5 @@
-build: requirements.api.txt
-	docker build -t nomic-vision-1.5-api:latest .
+build: requirements.api.txt server.py
+	docker build -f Dockerfile -t nomic-vision-1.5-api:latest .
 
 snowman.png:
 	curl -fsSL https://huggingface.co/microsoft/kosmos-2-patch14-224/resolve/main/snowman.png -o snowman.png
@@ -15,9 +15,42 @@ lint:
 	uvx isort --profile black .
 
 tag: build
-	docker tag nomic-vision-1.5-api:latest mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2
-	docker tag nomic-vision-1.5-api:latest mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)
-	docker tag nomic-vision-1.5-api:latest mindthemath/nomic-vision-1.5-api:latest
+	docker tag nomic-vision-1.5-api:latest mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-gpu
+	docker tag nomic-vision-1.5-api:latest mindthemath/nomic-vision-1.5-api:gpu
+	docker images | grep mindthemath/nomic-vision-1.5-api
+
+build-122:
+	docker build -t mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2 -f Dockerfile.cu122
+	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2
+	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-vision-1.5-api:cu12.2.2
+	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-vision-1.5-api:cu12.2
+
+build-121: requirements.cu121.txt
+	docker build -t mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1.1 -f Dockerfile.cu121
+	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1.1 mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1
+	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1.1 mindthemath/nomic-vision-1.5-api:cu12.1.1
+	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1.1 mindthemath/nomic-vision-1.5-api:cu12.1
+
+push-cu: build-121 build-122 tag
+	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1.1
+	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2
+	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1
+	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2
+	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-gpu
+	docker push mindthemath/nomic-vision-1.5-api:cu12.2.2
+	docker push mindthemath/nomic-vision-1.5-api:cu12.1.1
+	docker push mindthemath/nomic-vision-1.5-api:cu12.2
+	docker push mindthemath/nomic-vision-1.5-api:cu12.1
+	docker push mindthemath/nomic-vision-1.5-api:gpu
+
+push: build
+	docker buildx build -f Dockerfile.cpu \
+		--platform linux/amd64,linux/arm64 \
+		-t mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cpu \
+		-t mindthemath/nomic-vision-1.5-api:cpu \
+		-t mindthemath/nomic-vision-1.5-api:latest \
+		--push \
+		.
 	docker images | grep mindthemath/nomic-vision-1.5-api
 
 run: build
@@ -42,4 +75,13 @@ up: build
 	nomic-vision-1.5-api:latest
 
 requirements.api.txt: pyproject.toml
-	uv pip compile pyproject.toml --extra api -o requirements.api.txt
+	uv pip compile pyproject.toml --extra api --extra cu122 -o requirements.api.txt
+
+requirements.cu122.txt: pyproject.toml
+	uv pip compile pyproject.toml --extra api --extra cu122 -o requirements.cu122.txt
+
+requirements.cu121.txt: pyproject.toml
+	uv pip compile pyproject.toml --extra api --extra cu121 -o requirements.cu121.txt
+
+requirements.cpu.txt: pyproject.toml
+	uv pip compile pyproject.toml --extra api --extra cpu -o requirements.cpu.txt
