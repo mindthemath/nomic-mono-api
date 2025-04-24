@@ -14,6 +14,8 @@ PORT = int(os.environ.get("PORT", "8000"))
 LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO")
 NUM_API_SERVERS = int(os.environ.get("NUM_API_SERVERS", "1"))
 MAX_BATCH_SIZE = int(os.environ.get("MAX_BATCH_SIZE", "32"))
+NORMALIZE = bool(os.environ.get("NORMALIZE", "0"))
+DIMENSION = int(os.environ.get("DIMENSION", "256"))
 
 # Set up logging
 logging.basicConfig(
@@ -36,8 +38,8 @@ class NomicVisionAPI(ls.LitAPI):
         self.device = device
         self.model.to(device)
         self.model.eval()
-        self.normalize = True
-        self.dimension = 256
+        self.normalize = NORMALIZE
+        self.dimension = DIMENSION
 
     def decode_request(self, request):
         file_obj = request["content"]
