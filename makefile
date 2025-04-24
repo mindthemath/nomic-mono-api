@@ -20,13 +20,13 @@ tag: build
 	docker images | grep mindthemath/nomic-vision-1.5-api
 
 build-122:
-	docker build -t mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2 -f Dockerfile.cu122
+	docker build -t mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2 -f Dockerfile.cu122 .
 	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2
 	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-vision-1.5-api:cu12.2.2
 	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-vision-1.5-api:cu12.2
 
 build-121: requirements.cu121.txt
-	docker build -t mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1.1 -f Dockerfile.cu121
+	docker build -t mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1.1 -f Dockerfile.cu121 .
 	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1.1 mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1
 	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1.1 mindthemath/nomic-vision-1.5-api:cu12.1.1
 	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1.1 mindthemath/nomic-vision-1.5-api:cu12.1
