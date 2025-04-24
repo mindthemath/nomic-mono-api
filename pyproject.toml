@@ -16,6 +16,7 @@ api = [
     "litserve>=0.2.5",
     "python-multipart>=0.0.20",
     "hf-transfer>=0.1.8",
+    "hf-xet>=1.0.3",
 ]
 
 viz = [

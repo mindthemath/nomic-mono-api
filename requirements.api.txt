@@ -29,6 +29,8 @@ h11==0.14.0
     # via uvicorn
 hf-transfer==0.1.9
     # via viz-api (pyproject.toml)
+hf-xet==1.0.3
+    # via viz-api (pyproject.toml)
 httptools==0.6.4
     # via uvicorn
 huggingface-hub==0.30.2
