@@ -5,7 +5,7 @@ snowman.png:
 	curl -fsSL https://huggingface.co/microsoft/kosmos-2-patch14-224/resolve/main/snowman.png -o snowman.png
 
 test: snowman.png
-	curl -X POST -F "content=@snowman.png" http://127.0.0.1:8030/embed | jq .output
+	curl -X POST -F "content=@snowman.png" http://127.0.0.1:8030/embed | jq .embedding[0]
 
 ptest: snowman.png
 	seq 1 23 | parallel --jobs 24 "curl -X POST -F 'content=@snowman.png' http://127.0.0.1:8030/embed 2>&1 || echo 'Request failed'"
@@ -63,6 +63,7 @@ run: build
 	-e LOG_LEVEL=$(or $(LOG_LEVEL),INFO) \
 	-e PORT=8000 \
 	nomic-vision-1.5-api:latest
+
 up: build
 	docker run --restart unless-stopped -d \
 	--name embed-image-v1.5 \

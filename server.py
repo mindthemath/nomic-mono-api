@@ -44,7 +44,7 @@ class NomicVisionAPI(ls.LitAPI):
     def decode_request(self, request):
         file_obj = request["content"]
 
-        if "http" in file_obj:
+        if isinstance(file_obj, str) and "http" in file_obj:
             image = Image.open(requests.get(file_obj, stream=True).raw)
             logger.info("Processing URL input.")
             return image
@@ -60,7 +60,11 @@ class NomicVisionAPI(ls.LitAPI):
                 file_obj.file.close()
 
     def predict(self, images):
-        logger.info(f"Generating {len(images)} embeddings.")
+        if isinstance(images, list):
+            logger.info(f"Generating {len(images)} embeddings.")
+        else:
+            logger.info("Generating 1 embedding.")
+
         inputs = self.processor(images, return_tensors="pt")
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
 
