@@ -43,9 +43,6 @@ class NomicVisionAPI(ls.LitAPI):
 
     def decode_request(self, request):
         file_obj = request["content"]
-        opts = {}  # CURRENTLY UNUSED!
-        opts["normalize"] = request.get("normalize", self.normalize)
-        opts["dimension"] = request.get("dimension", self.dimension)
 
         if "http" in file_obj:
             image = Image.open(requests.get(file_obj, stream=True).raw)
