@@ -5,10 +5,10 @@ snowman.png:
 	curl -fsSL https://huggingface.co/microsoft/kosmos-2-patch14-224/resolve/main/snowman.png -o snowman.png
 
 test: snowman.png
-	curl -X POST -F "content=@snowman.png" http://127.0.0.1:8030/predict | jq .output
+	curl -X POST -F "content=@snowman.png" http://127.0.0.1:8030/embed | jq .output
 
 ptest: snowman.png
-	seq 1 23 | parallel --jobs 24 "curl -X POST -F 'content=@snowman.png' http://127.0.0.1:8030/predict 2>&1 || echo 'Request failed'"
+	seq 1 23 | parallel --jobs 24 "curl -X POST -F 'content=@snowman.png' http://127.0.0.1:8030/embed 2>&1 || echo 'Request failed'"
 
 lint:
 	uvx black .
