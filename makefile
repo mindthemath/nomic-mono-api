@@ -43,7 +43,15 @@ push-cu: build-121 build-122 tag
 	docker push mindthemath/nomic-vision-1.5-api:cu12.1
 	docker push mindthemath/nomic-vision-1.5-api:gpu
 
-push: build
+push: push-cpu
+	docker buildx build -f Dockerfile.prebaked \
+		--platform linux/amd64,linux/arm64 \
+		-t mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cpu-prebaked \
+		-t mindthemath/nomic-vision-1.5-api:cpu-prebaked \
+		--push \
+		.
+
+push-cpu: build
 	docker buildx build -f Dockerfile.cpu \
 		--platform linux/amd64,linux/arm64 \
 		-t mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cpu \

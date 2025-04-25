@@ -45,6 +45,7 @@ class NomicVisionAPI(ls.LitAPI):
         file_obj = request["content"]
 
         if isinstance(file_obj, str) and "http" in file_obj:
+            file_obj = file_obj.replace("localhost:3210", "backend:3210")  # HACK
             image = Image.open(requests.get(file_obj, stream=True).raw)
             logger.info("Processing URL input.")
             return image

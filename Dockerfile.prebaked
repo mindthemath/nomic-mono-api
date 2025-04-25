@@ -1,0 +1,5 @@
+FROM mindthemath/nomic-vision-1.5-api:cpu
+RUN python -c "from transformers import AutoImageProcessor, AutoModel; \
+    AutoImageProcessor.from_pretrained('nomic-ai/nomic-embed-vision-v1.5'); \
+    AutoModel.from_pretrained('nomic-ai/nomic-embed-vision-v1.5', trust_remote_code=True)"
+COPY server.py /app
