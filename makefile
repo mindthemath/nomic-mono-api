@@ -19,28 +19,38 @@ tag: build
 	docker tag nomic-vision-1.5-api:latest mindthemath/nomic-vision-1.5-api:gpu
 	docker images | grep mindthemath/nomic-vision-1.5-api
 
-build-122:
+build-118: requirements.cu118.txt
+	docker build -t mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu11.8.0 -f Dockerfile.cu118 .
+	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu11.8.0 mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu11.8
+	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu11.8.0 mindthemath/nomic-vision-1.5-api:cu11.8.0
+	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu11.8.0 mindthemath/nomic-vision-1.5-api:cu11.8
+
+build-122: requirements.cu122.txt
 	docker build -t mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2 -f Dockerfile.cu122 .
 	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2
 	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-vision-1.5-api:cu12.2.2
 	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-vision-1.5-api:cu12.2
 
-build-121: requirements.cu121.txt
-	docker build -t mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1.1 -f Dockerfile.cu121 .
-	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1.1 mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1
-	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1.1 mindthemath/nomic-vision-1.5-api:cu12.1.1
-	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1.1 mindthemath/nomic-vision-1.5-api:cu12.1
+build-124: requirements.cu124.txt
+	docker build -t mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.4.1 -f Dockerfile.cu124 .
+	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.4.1 mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.4
+	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.4.1 mindthemath/nomic-vision-1.5-api:cu12.4.1
+	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.4.1 mindthemath/nomic-vision-1.5-api:cu12.4
 
-push-cu: build-121 build-122 tag
-	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1.1
+push-cu: build-118 build-122 build-124 tag
+	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu11.8.0
 	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2
-	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.1
+	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.4.1
+	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu11.8
 	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2
+	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.4
 	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-gpu
+	docker push mindthemath/nomic-vision-1.5-api:cu12.4.1
 	docker push mindthemath/nomic-vision-1.5-api:cu12.2.2
-	docker push mindthemath/nomic-vision-1.5-api:cu12.1.1
+	docker push mindthemath/nomic-vision-1.5-api:cu11.8.0
+	docker push mindthemath/nomic-vision-1.5-api:cu12.4
 	docker push mindthemath/nomic-vision-1.5-api:cu12.2
-	docker push mindthemath/nomic-vision-1.5-api:cu12.1
+	docker push mindthemath/nomic-vision-1.5-api:cu11.8
 	docker push mindthemath/nomic-vision-1.5-api:gpu
 
 push: push-cpu
@@ -84,13 +94,16 @@ up: build
 	nomic-vision-1.5-api:latest
 
 requirements.api.txt: pyproject.toml
-	uv pip compile pyproject.toml --extra api --extra cu122 -o requirements.api.txt
+	uv pip compile pyproject.toml --extra api --extra cu126 --upgrade -o requirements.api.txt
 
 requirements.cu122.txt: pyproject.toml
-	uv pip compile pyproject.toml --extra api --extra cu122 -o requirements.cu122.txt
+	uv pip compile pyproject.toml --extra api --extra cu122 --upgrade -o requirements.cu122.txt
 
-requirements.cu121.txt: pyproject.toml
-	uv pip compile pyproject.toml --extra api --extra cu121 -o requirements.cu121.txt
+requirements.cu124.txt: pyproject.toml
+	uv pip compile pyproject.toml --extra api --extra cu126 --upgrade -o requirements.cu124.txt
+
+requirements.cu118.txt: pyproject.toml
+	uv pip compile pyproject.toml --extra api --extra cu118 --upgrade -o requirements.cu118.txt
 
 requirements.cpu.txt: pyproject.toml
-	uv pip compile pyproject.toml --extra api --extra cpu -o requirements.cpu.txt
+	uv pip compile pyproject.toml --extra api --extra cpu --upgrade -o requirements.cpu.txt

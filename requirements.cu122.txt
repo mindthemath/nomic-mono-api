@@ -6,9 +6,9 @@ anyio==4.9.0
     # via
     #   starlette
     #   watchfiles
-certifi==2025.1.31
+certifi==2025.4.26
     # via requests
-charset-normalizer==3.4.1
+charset-normalizer==3.4.2
     # via requests
 click==8.1.8
     # via uvicorn
@@ -29,7 +29,7 @@ h11==0.16.0
     # via uvicorn
 hf-transfer==0.1.9
     # via viz-api (pyproject.toml)
-hf-xet==1.0.4
+hf-xet==1.1.0
     # via viz-api (pyproject.toml)
 httptools==0.6.4
     # via uvicorn
@@ -96,9 +96,9 @@ packaging==25.0
     #   transformers
 pillow==11.2.1
     # via viz-api (pyproject.toml)
-pydantic==2.11.3
+pydantic==2.11.4
     # via fastapi
-pydantic-core==2.33.1
+pydantic-core==2.33.2
     # via pydantic
 python-dotenv==1.1.0
     # via uvicorn
@@ -119,7 +119,7 @@ requests==2.32.3
     #   transformers
 safetensors==0.5.3
     # via transformers
-setuptools==79.0.1
+setuptools==80.3.0
     # via
     #   torch
     #   triton
@@ -127,11 +127,11 @@ sniffio==1.3.1
     # via anyio
 starlette==0.46.2
     # via fastapi
-sympy==1.13.3
+sympy==1.14.0
     # via torch
 tokenizers==0.21.1
     # via transformers
-torch==2.7.0
+torch==2.7.0+cu126
     # via viz-api (pyproject.toml)
 tqdm==4.67.1
     # via
