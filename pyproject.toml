@@ -52,6 +52,7 @@ conflicts = [
   [
     { extra = "cpu" },
     { extra = "cu118" },
+    { extra = "cu122" },
     { extra = "cu126" },
   ],
 ]
