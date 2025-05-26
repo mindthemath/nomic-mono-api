@@ -25,7 +25,7 @@ cu118 = [
 ]
 
 cu122 = [
-    "torch>=2.7.0",
+    "torch>=2.6.0",
 ]
 
 cu126 = [
@@ -54,7 +54,7 @@ conflicts = [
 torch = [
     { index = "pytorch-cpu",   extra = "cpu" },
     { index = "pytorch-cu118", extra = "cu118" },
-    { index = "pytorch-cu126", extra = "cu122" },
+    { index = "pytorch-cu124", extra = "cu122" },
     { index = "pytorch-cu126", extra = "cu126" },
 ]
 
