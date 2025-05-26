@@ -77,6 +77,7 @@ run: build
 	--gpus all \
 	-p 8000:8000 \
 	-e NUM_API_SERVERS=$(or $(NUM_API_SERVERS),1) \
+	-e WORKERS_PER_DEVICE=$(or $(WORKERS_PER_DEVICE),4) \
 	-e MAX_BATCH_SIZE=$(or $(MAX_BATCH_SIZE),32) \
 	-e LOG_LEVEL=$(or $(LOG_LEVEL),INFO) \
 	-e PORT=8000 \
@@ -87,11 +88,15 @@ up: build
 	--name embed-image-v1.5 \
 	--gpus all \
 	-p 8000:8000 \
-	-e NUM_API_SERVERS=$(or $(NUM_API_SERVERS),4) \
+	-e NUM_API_SERVERS=$(or $(NUM_API_SERVERS),1) \
+	-e WORKERS_PER_DEVICE=$(or $(WORKERS_PER_DEVICE),4) \
 	-e MAX_BATCH_SIZE=$(or $(MAX_BATCH_SIZE),32) \
 	-e LOG_LEVEL=$(or $(LOG_LEVEL),INFO) \
 	-e PORT=8000 \
 	nomic-vision-1.5-api:latest
+
+
+requirements: requirements.api.txt requirements.cu118.txt requirements.cu122.txt requirements.cu122.txt requirements.cpu.txt
 
 requirements.api.txt: pyproject.toml
 	uv pip compile pyproject.toml --extra cu126 --upgrade -o requirements.api.txt
