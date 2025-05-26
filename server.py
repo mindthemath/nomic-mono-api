@@ -13,6 +13,7 @@ from transformers import AutoImageProcessor, AutoModel
 PORT = int(os.environ.get("PORT", "8000"))
 LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO")
 NUM_API_SERVERS = int(os.environ.get("NUM_API_SERVERS", "1"))
+WORKERS_PER_DEVICE = int(os.environ.get("WORKERS_PER_DEVICE ", "1"))
 MAX_BATCH_SIZE = int(os.environ.get("MAX_BATCH_SIZE", "32"))
 NORMALIZE = bool(os.environ.get("NORMALIZE", "0"))
 DIMENSION = int(os.environ.get("DIMENSION", "256"))
@@ -87,16 +88,21 @@ class NomicVisionAPI(ls.LitAPI):
 
 
 if __name__ == "__main__":
-    server = ls.LitServer(
-        NomicVisionAPI(),
-        accelerator="auto",
+    api = NomicVisionAPI(
         max_batch_size=MAX_BATCH_SIZE,
+        batch_timeout=1,
+    )
+    server = ls.LitServer(
+        api,
+        accelerator="auto",
         track_requests=True,
         api_path="/embed",
-        workers_per_device=NUM_API_SERVERS,
+        workers_per_device=WORKERS_PER_DEVICE,
     )
     server.run(
         port=PORT,
         host="0.0.0.0",
         log_level=LOG_LEVEL.lower(),
+        num_api_servers=NUM_API_SERVERS,
+        generate_client_file=False,
     )

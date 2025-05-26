@@ -5,10 +5,10 @@ snowman.png:
 	curl -fsSL https://huggingface.co/microsoft/kosmos-2-patch14-224/resolve/main/snowman.png -o snowman.png
 
 test: snowman.png
-	curl -X POST -F "content=@snowman.png" http://127.0.0.1:8030/embed | jq .embedding
+	curl -X POST -F "content=@snowman.png" http://127.0.0.1:8000/embed | jq .embedding
 
 ptest: snowman.png
-	seq 1 23 | parallel --jobs 24 "curl -X POST -F 'content=@snowman.png' http://127.0.0.1:8030/embed 2>&1 || echo 'Request failed'"
+	seq 1 24 | parallel --jobs 24 "curl -X POST -F 'content=@snowman.png' http://127.0.0.1:8000/embed 2>&1 || echo 'Request failed'"
 
 lint:
 	uvx black .
@@ -75,7 +75,7 @@ run: build
 	docker run --rm -ti \
 	--name embed-image-v1.5 \
 	--gpus all \
-	-p 8030:8000 \
+	-p 8000:8000 \
 	-e NUM_API_SERVERS=$(or $(NUM_API_SERVERS),1) \
 	-e MAX_BATCH_SIZE=$(or $(MAX_BATCH_SIZE),32) \
 	-e LOG_LEVEL=$(or $(LOG_LEVEL),INFO) \
@@ -86,7 +86,7 @@ up: build
 	docker run --restart unless-stopped -d \
 	--name embed-image-v1.5 \
 	--gpus all \
-	-p 8030:8000 \
+	-p 8000:8000 \
 	-e NUM_API_SERVERS=$(or $(NUM_API_SERVERS),4) \
 	-e MAX_BATCH_SIZE=$(or $(MAX_BATCH_SIZE),32) \
 	-e LOG_LEVEL=$(or $(LOG_LEVEL),INFO) \
@@ -94,16 +94,16 @@ up: build
 	nomic-vision-1.5-api:latest
 
 requirements.api.txt: pyproject.toml
-	uv pip compile pyproject.toml --extra api --extra cu126 --upgrade -o requirements.api.txt
+	uv pip compile pyproject.toml --extra cu126 --upgrade -o requirements.api.txt
 
 requirements.cu122.txt: pyproject.toml
-	uv pip compile pyproject.toml --extra api --extra cu122 --upgrade -o requirements.cu122.txt
+	uv pip compile pyproject.toml --extra cu122 --upgrade -o requirements.cu122.txt
 
 requirements.cu124.txt: pyproject.toml
-	uv pip compile pyproject.toml --extra api --extra cu126 --upgrade -o requirements.cu124.txt
+	uv pip compile pyproject.toml --extra cu126 --upgrade -o requirements.cu124.txt
 
 requirements.cu118.txt: pyproject.toml
-	uv pip compile pyproject.toml --extra api --extra cu118 --upgrade -o requirements.cu118.txt
+	uv pip compile pyproject.toml --extra cu118 --upgrade -o requirements.cu118.txt
 
 requirements.cpu.txt: pyproject.toml
-	uv pip compile pyproject.toml --extra api --extra cpu --upgrade -o requirements.cpu.txt
+	uv pip compile pyproject.toml --extra cpu --upgrade -o requirements.cpu.txt
