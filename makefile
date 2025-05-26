@@ -99,7 +99,7 @@ up: build
 requirements: requirements.api.txt requirements.cu118.txt requirements.cu122.txt requirements.cu124.txt requirements.cpu.txt
 
 requirements.api.txt: pyproject.toml
-	uv pip compile pyproject.toml --extra cu126 --upgrade -o requirements.api.txt
+	uv pip compile pyproject.toml --extra cu122 --upgrade -o requirements.api.txt
 
 requirements.cu122.txt: pyproject.toml
 	uv pip compile pyproject.toml --extra cu122 --upgrade -o requirements.cu122.txt
