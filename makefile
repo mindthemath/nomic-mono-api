@@ -96,7 +96,7 @@ up: build
 	nomic-vision-1.5-api:latest
 
 
-requirements: requirements.api.txt requirements.cu118.txt requirements.cu122.txt requirements.cu122.txt requirements.cpu.txt
+requirements: requirements.api.txt requirements.cu118.txt requirements.cu122.txt requirements.cu124.txt requirements.cpu.txt
 
 requirements.api.txt: pyproject.toml
 	uv pip compile pyproject.toml --extra cu126 --upgrade -o requirements.api.txt
