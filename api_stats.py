@@ -285,10 +285,12 @@ def get_image_colors(image, averaging_method="arithmetic"):
 class ImageStatsAPI(ls.LitAPI):
     def setup(self, device):
         if device != "cpu":
-            raise ValueError(
+            logger.warning(
                 "ImageStatsAPI does not benefit from hardware acceleration. Use 'cpu'."
             )
-        logger.info(f"Set up ImageStatsAPI for color analysis with {AVERAGING_METHOD=}.")
+        logger.info(
+            f"Set up ImageStatsAPI for color analysis with {AVERAGING_METHOD=}."
+        )
 
     def decode_request(self, request) -> Image.Image:
         image = decode_request(request)
