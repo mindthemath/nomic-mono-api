@@ -32,6 +32,10 @@ cu126 = [
     "torch>=2.7.0",
 ]
 
+text = [
+    "sentence-transformers>=5.0.0",
+]
+
 [dependency-groups]
 dev = [
     "requests>=2.32.3",
