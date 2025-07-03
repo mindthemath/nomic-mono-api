@@ -4,10 +4,10 @@ import os
 import litserve as ls
 import torch
 import torch.nn.functional as F
+from PIL import Image
 from transformers import AutoImageProcessor, AutoModel
 
 from api_utils import decode_request
-from PIL import Image
 
 # Environment configurations
 PORT = int(os.environ.get("PORT", "8000"))
@@ -17,7 +17,7 @@ WORKERS_PER_DEVICE = int(os.environ.get("WORKERS_PER_DEVICE ", "1"))
 MAX_BATCH_SIZE = int(os.environ.get("MAX_BATCH_SIZE", "32"))
 
 NORMALIZE = bool(os.environ.get("NORMALIZE", "0"))
-DIMENSION = int(os.environ.get("DIMENSION", "256"))
+DIMENSION = int(os.environ.get("DIMENSION", "768"))
 
 # Set up logging
 logging.basicConfig(
