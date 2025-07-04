@@ -11,6 +11,7 @@ dependencies = [
     "python-multipart>=0.0.20",
     "hf-transfer>=0.1.8",
     "hf-xet>=1.0.3",
+    "sentence-transformers>=5.0.0",
     "transformers>=4.47.1",
     "torch>=2.6.0",
 ]
@@ -30,10 +31,6 @@ cu122 = [
 
 cu126 = [
     "torch>=2.7.0",
-]
-
-text = [
-    "sentence-transformers>=5.0.0",
 ]
 
 [dependency-groups]

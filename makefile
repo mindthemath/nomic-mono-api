@@ -1,5 +1,6 @@
-build: requirements.api.txt server.py
-	docker build -f Dockerfile -t nomic-mono-1.5-api:latest .
+build: requirements.cpu.txt
+	docker build -f Dockerfile.cpu -t nomic-mono-1.5-api:cpu .
+	docker build -f Dockerfile.prebaked -t nomic-mono-1.5-api:cpu-prebaked .
 
 snowman.png:
 	curl -fsSL https://huggingface.co/microsoft/kosmos-2-patch14-224/resolve/main/snowman.png -o snowman.png
