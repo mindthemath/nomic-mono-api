@@ -16,19 +16,22 @@ TEXT_MAX_BATCH_SIZE = int(os.environ.get("TEXT_MAX_BATCH_SIZE", "32"))
 TEXT_BATCH_TIMEOUT = float(os.environ.get("TEXT_BATCH_TIMEOUT", "0.1"))
 
 if __name__ == "__main__":
-    stats_api = ImageStatsAPI(max_batch_size=1, api_path="/stats")
-    embed_api = NomicVisionAPI(
+    stats_api = ImageStatsAPI(
+        max_batch_size=1,
+        api_path="/img/stats",
+    )
+    img_api = NomicVisionAPI(
         max_batch_size=IMAGE_MAX_BATCH_SIZE,
         batch_timeout=IMAGE_BATCH_TIMEOUT,
-        api_path="/embed",
+        api_path="/img/embed",
     )
-    text_api = NomicTextAPI(
+    txt_api = NomicTextAPI(
         max_batch_size=TEXT_MAX_BATCH_SIZE,
         batch_timeout=TEXT_BATCH_TIMEOUT,
-        api_path="/embed",
+        api_path="/txt/embed",
     )
     server = ls.LitServer(
-        [embed_api, stats_api, text_api],
+        [img_api, stats_api, txt_api],
         accelerator="auto",
         track_requests=True,
         workers_per_device=WORKERS_PER_DEVICE,

@@ -73,7 +73,7 @@ class NomicVisionAPI(ls.LitAPI):
         return embedding.cpu().numpy()
 
     def encode_response(self, output):
-        return {"embedding": output.tolist()}
+        return {"embeddings": output.tolist()}
 
 
 if __name__ == "__main__":

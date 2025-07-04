@@ -1,8 +1,11 @@
 import logging
+import os
 from io import BytesIO
 
 import requests
 from PIL import Image
+
+LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO")
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -19,6 +22,7 @@ def decode_request(request) -> Image.Image | None:
             requests.get(file_obj, stream=True).raw
         )  # TODO: handle errors?
         logger.info("Processing URL input.")
+        return image
     try:
         file_bytes = file_obj.file.read()
         image = Image.open(BytesIO(file_bytes))
