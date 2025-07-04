@@ -1,5 +1,5 @@
 build: requirements.api.txt server.py
-	docker build -f Dockerfile -t nomic-vision-1.5-api:latest .
+	docker build -f Dockerfile -t nomic-mono-1.5-api:latest .
 
 snowman.png:
 	curl -fsSL https://huggingface.co/microsoft/kosmos-2-patch14-224/resolve/main/snowman.png -o snowman.png
@@ -15,61 +15,61 @@ lint:
 	uvx isort --profile black .
 
 tag: build
-	docker tag nomic-vision-1.5-api:latest mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-gpu
-	docker tag nomic-vision-1.5-api:latest mindthemath/nomic-vision-1.5-api:gpu
-	docker images | grep mindthemath/nomic-vision-1.5-api
+	docker tag nomic-mono-1.5-api:latest mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-gpu
+	docker tag nomic-mono-1.5-api:latest mindthemath/nomic-mono-1.5-api:gpu
+	docker images | grep mindthemath/nomic-mono-1.5-api
 
 build-118: requirements.cu118.txt
-	docker build -t mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu11.8.0 -f Dockerfile.cu118 .
-	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu11.8.0 mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu11.8
-	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu11.8.0 mindthemath/nomic-vision-1.5-api:cu11.8.0
-	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu11.8.0 mindthemath/nomic-vision-1.5-api:cu11.8
+	docker build -t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8.0 -f Dockerfile.cu118 .
+	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8.0 mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8
+	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8.0 mindthemath/nomic-mono-1.5-api:cu11.8.0
+	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8.0 mindthemath/nomic-mono-1.5-api:cu11.8
 
 build-122: requirements.cu122.txt
-	docker build -t mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2 -f Dockerfile.cu122 .
-	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2
-	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-vision-1.5-api:cu12.2.2
-	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-vision-1.5-api:cu12.2
+	docker build -t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2.2 -f Dockerfile.cu122 .
+	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2
+	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-mono-1.5-api:cu12.2.2
+	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-mono-1.5-api:cu12.2
 
 build-124: requirements.cu124.txt
-	docker build -t mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.4.1 -f Dockerfile.cu124 .
-	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.4.1 mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.4
-	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.4.1 mindthemath/nomic-vision-1.5-api:cu12.4.1
-	docker tag mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.4.1 mindthemath/nomic-vision-1.5-api:cu12.4
+	docker build -t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.4.1 -f Dockerfile.cu124 .
+	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.4.1 mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.4
+	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.4.1 mindthemath/nomic-mono-1.5-api:cu12.4.1
+	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.4.1 mindthemath/nomic-mono-1.5-api:cu12.4
 
 push-cu: build-118 build-122 build-124 tag
-	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu11.8.0
-	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2.2
-	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.4.1
-	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu11.8
-	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.2
-	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cu12.4
-	docker push mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-gpu
-	docker push mindthemath/nomic-vision-1.5-api:cu12.4.1
-	docker push mindthemath/nomic-vision-1.5-api:cu12.2.2
-	docker push mindthemath/nomic-vision-1.5-api:cu11.8.0
-	docker push mindthemath/nomic-vision-1.5-api:cu12.4
-	docker push mindthemath/nomic-vision-1.5-api:cu12.2
-	docker push mindthemath/nomic-vision-1.5-api:cu11.8
-	docker push mindthemath/nomic-vision-1.5-api:gpu
+	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8.0
+	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2.2
+	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.4.1
+	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8
+	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2
+	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.4
+	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-gpu
+	docker push mindthemath/nomic-mono-1.5-api:cu12.4.1
+	docker push mindthemath/nomic-mono-1.5-api:cu12.2.2
+	docker push mindthemath/nomic-mono-1.5-api:cu11.8.0
+	docker push mindthemath/nomic-mono-1.5-api:cu12.4
+	docker push mindthemath/nomic-mono-1.5-api:cu12.2
+	docker push mindthemath/nomic-mono-1.5-api:cu11.8
+	docker push mindthemath/nomic-mono-1.5-api:gpu
 
 push: push-cpu
-	docker buildx build -f Dockerfile.prebaked \
+	docker buildx build --builder multiarch-builder -f Dockerfile.prebaked \
 		--platform linux/amd64,linux/arm64 \
-		-t mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cpu-prebaked \
-		-t mindthemath/nomic-vision-1.5-api:cpu-prebaked \
+		-t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cpu-prebaked \
+		-t mindthemath/nomic-mono-1.5-api:cpu-prebaked \
 		--push \
 		.
 
 push-cpu: build
-	docker buildx build -f Dockerfile.cpu \
+	docker buildx build --builder multiarch-builder -f Dockerfile.cpu \
 		--platform linux/amd64,linux/arm64 \
-		-t mindthemath/nomic-vision-1.5-api:$$(date +%Y%m%d)-cpu \
-		-t mindthemath/nomic-vision-1.5-api:cpu \
-		-t mindthemath/nomic-vision-1.5-api:latest \
+		-t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cpu \
+		-t mindthemath/nomic-mono-1.5-api:cpu \
+		-t mindthemath/nomic-mono-1.5-api:latest \
 		--push \
 		.
-	docker images | grep mindthemath/nomic-vision-1.5-api
+	docker images | grep mindthemath/nomic-mono-1.5-api
 
 run: build
 	docker run --rm -ti \
@@ -81,7 +81,7 @@ run: build
 	-e MAX_BATCH_SIZE=$(or $(MAX_BATCH_SIZE),32) \
 	-e LOG_LEVEL=$(or $(LOG_LEVEL),INFO) \
 	-e PORT=8000 \
-	nomic-vision-1.5-api:latest
+	nomic-mono-1.5-api:latest
 
 up: build
 	docker run --restart unless-stopped -d \
@@ -93,8 +93,11 @@ up: build
 	-e MAX_BATCH_SIZE=$(or $(MAX_BATCH_SIZE),32) \
 	-e LOG_LEVEL=$(or $(LOG_LEVEL),INFO) \
 	-e PORT=8000 \
-	nomic-vision-1.5-api:latest
+	nomic-mono-1.5-api:latest
 
+setup-buildx:
+	docker buildx create --name multiarch-builder
+	docker buildx inspect --bootstrap
 
 requirements: requirements.api.txt requirements.cu118.txt requirements.cu122.txt requirements.cu124.txt requirements.cpu.txt
 
