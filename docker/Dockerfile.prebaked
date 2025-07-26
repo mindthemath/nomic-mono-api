@@ -14,5 +14,6 @@ RUN python -c "from transformers import AutoImageProcessor, AutoModel; \
     AutoModel.from_pretrained('nomic-ai/nomic-embed-vision-v1.5', trust_remote_code=True); \
     from sentence_transformers import SentenceTransformer; \
     SentenceTransformer('nomic-ai/nomic-embed-text-v1.5', trust_remote_code=True);"
+
 COPY server.py api_embed.py api_stats.py api_text.py api_utils.py /app
 CMD ["python", "/app/server.py"]
