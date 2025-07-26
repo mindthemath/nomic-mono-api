@@ -63,4 +63,5 @@ if __name__ == "__main__":
         host="0.0.0.0",
         log_level=LOG_LEVEL.lower(),
         num_api_servers=NUM_API_SERVERS,
+        generate_client_file=False,
     )
