@@ -1,0 +1,7 @@
+makefile
+pyproject.toml
+uv.lock
+*.sh
+*.png
+.python-version
+.venv/

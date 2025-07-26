@@ -1,6 +1,6 @@
 build: lint requirements.cpu.txt
-	docker build -f Dockerfile.cpu -t nomic-mono-1.5-api:cpu -t nomic-mono-1.5-api:latest .
-	# docker build -f Dockerfile.prebaked -t nomic-mono-1.5-api:cpu-prebaked .
+	docker build -f docker/Dockerfile.cpu -t nomic-mono-1.5-api:cpu -t nomic-mono-1.5-api:latest .
+	# docker build -f docker/Dockerfile.prebaked -t nomic-mono-1.5-api:cpu-prebaked .
 
 snowman.png:
 	curl -fsSL https://huggingface.co/microsoft/kosmos-2-patch14-224/resolve/main/snowman.png -o snowman.png
@@ -22,7 +22,7 @@ tag: build-126
 	docker images | grep mindthemath/nomic-mono-1.5-api
 
 build-118: requirements.cu118.txt
-	docker build -f Dockerfile.cu118 \
+	docker build -f docker/Dockerfile.cu118 \
 		-t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8.0 \
 		-t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8 \
 		-t mindthemath/nomic-mono-1.5-api:cu11.8.0 \
@@ -30,7 +30,7 @@ build-118: requirements.cu118.txt
 		.
 
 build-122: requirements.cu122.txt
-	docker build -f Dockerfile.cu122 \
+	docker build -f docker/Dockerfile.cu122 \
 		-t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2.2 \
 		-t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2 \
 		-t mindthemath/nomic-mono-1.5-api:cu12.2.2 \
@@ -38,7 +38,7 @@ build-122: requirements.cu122.txt
 		.
 
 build-126: requirements.cu126.txt
-	docker build -f Dockerfile.cu126 \
+	docker build -f docker/Dockerfile.cu126 \
 		-t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.6.1 \
 		-t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.6 \
 		-t mindthemath/nomic-mono-1.5-api:cu12.6.1 \
@@ -61,16 +61,16 @@ push-cu: lint build-118 build-122 build-126 tag
 	docker push mindthemath/nomic-mono-1.5-api:cu11.8
 	docker push mindthemath/nomic-mono-1.5-api:gpu
 
-push-pre: push-cpu
-	docker buildx build --builder multiarch-builder -f Dockerfile.prebaked \
+push-pre: lint
+	docker buildx build --builder multiarch-builder -f docker/Dockerfile.prebaked \
 		--platform linux/amd64,linux/arm64 \
 		-t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cpu-prebaked \
 		-t mindthemath/nomic-mono-1.5-api:cpu-prebaked \
 		--push \
 		.
 
-push-cpu: build
-	docker buildx build --builder multiarch-builder -f Dockerfile.cpu \
+push-cpu: lint
+	docker buildx build --builder multiarch-builder -f docker/Dockerfile.cpu \
 		--platform linux/amd64,linux/arm64 \
 		-t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cpu \
 		-t mindthemath/nomic-mono-1.5-api:cpu \
@@ -78,6 +78,8 @@ push-cpu: build
 		--push \
 		.
 	docker images | grep mindthemath/nomic-mono-1.5-api
+
+push: push-cu push-cpu push-pre
 
 run-gpu: tag
 	docker run --rm -ti \
