@@ -5,8 +5,16 @@ build: lint requirements.cpu.txt
 snowman.png:
 	curl -fsSL https://huggingface.co/microsoft/kosmos-2-patch14-224/resolve/main/snowman.png -o snowman.png
 
-test: snowman.png
+test-embed-image: snowman.png
 	curl -X POST -F "content=@snowman.png" http://127.0.0.1:8000/img/embed | jq .embeddings
+
+test-embed-text:
+	curl -X POST -F "input=hello" http://127.0.0.1:8000/txt/embed | jq .embeddings
+
+test-image-stats:
+	curl -X POST -F "content=@snowman.png" http://127.0.0.1:8000/img/stats | jq
+
+test: test-embed-image test-embed-text test-image-stats
 
 ptest: snowman.png
 	seq 1 64 | parallel --jobs 24 "curl -X POST -F 'content=@snowman.png' http://127.0.0.1:8000/img/embed 2>&1 || echo 'Request failed'"
@@ -97,6 +105,7 @@ run-gpu: tag
 run-cpu: build
 	docker run --rm -ti \
 	--name nomic-mono-api-cpu \
+	-p 8000:8000 \
 	nomic-mono-1.5-api:latest
 
 setup-buildx:
