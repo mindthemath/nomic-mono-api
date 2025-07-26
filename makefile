@@ -1,15 +1,15 @@
-build: requirements.cpu.txt
-	docker build -f Dockerfile.cpu -t nomic-mono-1.5-api:cpu .
-	docker build -f Dockerfile.prebaked -t nomic-mono-1.5-api:cpu-prebaked .
+build: lint requirements.cpu.txt
+	docker build -f Dockerfile.cpu -t nomic-mono-1.5-api:cpu -t nomic-mono-1.5-api:latest .
+	# docker build -f Dockerfile.prebaked -t nomic-mono-1.5-api:cpu-prebaked .
 
 snowman.png:
 	curl -fsSL https://huggingface.co/microsoft/kosmos-2-patch14-224/resolve/main/snowman.png -o snowman.png
 
 test: snowman.png
-	curl -X POST -F "content=@snowman.png" http://127.0.0.1:8030/embed | jq .embedding
+	curl -X POST -F "content=@snowman.png" http://127.0.0.1:8000/img/embed | jq .embeddings
 
 ptest: snowman.png
-	seq 1 24 | parallel --jobs 24 "curl -X POST -F 'content=@snowman.png' http://127.0.0.1:8030/embed 2>&1 || echo 'Request failed'"
+	seq 1 24 | parallel --jobs 24 "curl -X POST -F 'content=@snowman.png' http://127.0.0.1:8000/img/embed 2>&1 || echo 'Request failed'"
 
 lint:
 	uvx black .
@@ -76,23 +76,11 @@ push-cpu: build
 run: build
 	docker run --rm -ti \
 	--name embed-image-v1.5 \
-	--gpus all \
-	-p 8030:8000 \
+	-p 8000:8000 \
 	-e NUM_API_SERVERS=$(or $(NUM_API_SERVERS),1) \
 	-e WORKERS_PER_DEVICE=$(or $(WORKERS_PER_DEVICE),4) \
-	-e MAX_BATCH_SIZE=$(or $(MAX_BATCH_SIZE),32) \
-	-e LOG_LEVEL=$(or $(LOG_LEVEL),INFO) \
-	-e PORT=8000 \
-	nomic-mono-1.5-api:latest
-
-up: build
-	docker run --restart unless-stopped -d \
-	--name embed-image-v1.5 \
-	--gpus all \
-	-p 8030:8000 \
-	-e NUM_API_SERVERS=$(or $(NUM_API_SERVERS),1) \
-	-e WORKERS_PER_DEVICE=$(or $(WORKERS_PER_DEVICE),4) \
-	-e MAX_BATCH_SIZE=$(or $(MAX_BATCH_SIZE),32) \
+	-e IMAGE_MAX_BATCH_SIZE=$(or $(IMAGE_MAX_BATCH_SIZE),16) \
+	-e TEXT_MAX_BATCH_SIZE=$(or $(TEXT_MAX_BATCH_SIZE),32) \
 	-e LOG_LEVEL=$(or $(LOG_LEVEL),INFO) \
 	-e PORT=8000 \
 	nomic-mono-1.5-api:latest

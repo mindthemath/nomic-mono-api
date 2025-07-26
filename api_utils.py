@@ -37,7 +37,7 @@ def decode_request(request) -> Image.Image | None:
             response = requests.get(url, stream=True)
             response.raise_for_status()  # Raise an exception for bad status codes
             image = Image.open(BytesIO(response.content))
-            logger.info("Successfully processed URL input.")
+            logger.debug("Successfully processed URL input.")
             return image
         except requests.exceptions.RequestException as e:
             logger.error(f"Failed to fetch image from URL {url}: {e}")
@@ -45,15 +45,13 @@ def decode_request(request) -> Image.Image | None:
         except IOError as e:
             logger.error(f"Failed to open image from URL {url} content: {e}")
             return None
-    elif hasattr(file_content, "file") and not isinstance(
-        file_content, str
-    ):  # The linter is now happier here
+    elif hasattr(file_content, "file") and not isinstance(file_content, str):
         try:
             # We've narrowed the type, so file_content.file is now more safely accessed
             # The linter knows if we reach here, it's not a str.
             file_bytes = file_content.file.read()
             image = Image.open(BytesIO(file_bytes))
-            logger.info("Successfully processed file input.")
+            logger.debug("Successfully processed file input.")
             return image
         except (
             AttributeError
