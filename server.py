@@ -13,7 +13,7 @@ WORKERS_PER_DEVICE = int(os.environ.get("WORKERS_PER_DEVICE ", "1"))
 IMAGE_MAX_BATCH_SIZE = int(os.environ.get("IMAGE_MAX_BATCH_SIZE", "16"))
 IMAGE_BATCH_TIMEOUT = float(os.environ.get("IMAGE_BATCH_TIMEOUT", "0.2"))
 TEXT_MAX_BATCH_SIZE = int(os.environ.get("TEXT_MAX_BATCH_SIZE", "32"))
-TEXT_BATCH_TIMEOUT = float(os.environ.get("TEXT_BATCH_TIMEOUT", "0.1"))
+TEXT_BATCH_TIMEOUT = float(os.environ.get("TEXT_BATCH_TIMEOUT", "0.05"))
 
 if __name__ == "__main__":
     stats_api = ImageStatsAPI(
