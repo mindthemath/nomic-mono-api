@@ -9,37 +9,43 @@ test: snowman.png
 	curl -X POST -F "content=@snowman.png" http://127.0.0.1:8000/img/embed | jq .embeddings
 
 ptest: snowman.png
-	seq 1 24 | parallel --jobs 24 "curl -X POST -F 'content=@snowman.png' http://127.0.0.1:8000/img/embed 2>&1 || echo 'Request failed'"
+	seq 1 64 | parallel --jobs 24 "curl -X POST -F 'content=@snowman.png' http://127.0.0.1:8000/img/embed 2>&1 || echo 'Request failed'"
 
 lint:
 	uvx black .
 	uvx isort --profile black .
 	uvx ruff check . --fix
 
-tag: build
-	docker tag nomic-mono-1.5-api:latest mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-gpu
-	docker tag nomic-mono-1.5-api:latest mindthemath/nomic-mono-1.5-api:gpu
+tag: build-126
+	docker tag mindthemath/nomic-mono-1.5-api:cu12.6 mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-gpu
+	docker tag mindthemath/nomic-mono-1.5-api:cu12.6 mindthemath/nomic-mono-1.5-api:gpu
 	docker images | grep mindthemath/nomic-mono-1.5-api
 
 build-118: requirements.cu118.txt
-	docker build -t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8.0 -f Dockerfile.cu118 .
-	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8.0 mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8
-	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8.0 mindthemath/nomic-mono-1.5-api:cu11.8.0
-	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8.0 mindthemath/nomic-mono-1.5-api:cu11.8
+	docker build -f Dockerfile.cu118 \
+		-t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8.0 \
+		-t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8 \
+		-t mindthemath/nomic-mono-1.5-api:cu11.8.0 \
+		-t mindthemath/nomic-mono-1.5-api:cu11.8 \
+		.
 
 build-122: requirements.cu122.txt
-	docker build -t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2.2 -f Dockerfile.cu122 .
-	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2
-	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-mono-1.5-api:cu12.2.2
-	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-mono-1.5-api:cu12.2
+	docker build -f Dockerfile.cu122 \
+		-t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2.2 \
+		-t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2 \
+		-t mindthemath/nomic-mono-1.5-api:cu12.2.2 \
+		-t mindthemath/nomic-mono-1.5-api:cu12.2 \
+		.
 
 build-126: requirements.cu126.txt
-	docker build -t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.6.1 -f Dockerfile.cu126 .
-	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.6.1 mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.6
-	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.6.1 mindthemath/nomic-mono-1.5-api:cu12.6.1
-	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.6.1 mindthemath/nomic-mono-1.5-api:cu12.6
+	docker build -f Dockerfile.cu126 \
+		-t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.6.1 \
+		-t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.6 \
+		-t mindthemath/nomic-mono-1.5-api:cu12.6.1 \
+		-t mindthemath/nomic-mono-1.5-api:cu12.6 \
+		.
 
-push-cu: build-118 build-122 build-126 tag
+push-cu: lint build-118 build-122 build-126 tag
 	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8.0
 	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2.2
 	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.6.1
@@ -55,7 +61,7 @@ push-cu: build-118 build-122 build-126 tag
 	docker push mindthemath/nomic-mono-1.5-api:cu11.8
 	docker push mindthemath/nomic-mono-1.5-api:gpu
 
-push: push-cpu
+push-pre: push-cpu
 	docker buildx build --builder multiarch-builder -f Dockerfile.prebaked \
 		--platform linux/amd64,linux/arm64 \
 		-t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cpu-prebaked \
@@ -73,26 +79,29 @@ push-cpu: build
 		.
 	docker images | grep mindthemath/nomic-mono-1.5-api
 
-run: build
+run-gpu: tag
 	docker run --rm -ti \
-	--name embed-image-v1.5 \
+	--name nomic-mono-api-gpu \
+	--gpus all \
 	-p 8000:8000 \
 	-e NUM_API_SERVERS=$(or $(NUM_API_SERVERS),1) \
 	-e WORKERS_PER_DEVICE=$(or $(WORKERS_PER_DEVICE),4) \
-	-e IMAGE_MAX_BATCH_SIZE=$(or $(IMAGE_MAX_BATCH_SIZE),16) \
-	-e TEXT_MAX_BATCH_SIZE=$(or $(TEXT_MAX_BATCH_SIZE),32) \
+	-e IMAGE_MAX_BATCH_SIZE=$(or $(IMAGE_MAX_BATCH_SIZE),64) \
+	-e TEXT_MAX_BATCH_SIZE=$(or $(TEXT_MAX_BATCH_SIZE),64) \
 	-e LOG_LEVEL=$(or $(LOG_LEVEL),INFO) \
 	-e PORT=8000 \
+	mindthemath/nomic-mono-1.5-api:gpu
+
+run-cpu: build
+	docker run --rm -ti \
+	--name nomic-mono-api-cpu \
 	nomic-mono-1.5-api:latest
 
 setup-buildx:
 	docker buildx create --name multiarch-builder
 	docker buildx inspect --bootstrap
 
-requirements: requirements.api.txt requirements.cu118.txt requirements.cu122.txt requirements.cu126.txt requirements.cpu.txt
-
-requirements.api.txt: pyproject.toml
-	uv pip compile pyproject.toml --extra cu122 --upgrade -o requirements.api.txt
+requirements: requirements.cu118.txt requirements.cu122.txt requirements.cu126.txt requirements.cpu.txt
 
 requirements.cu118.txt: pyproject.toml
 	uv pip compile pyproject.toml --extra cu118 --upgrade -o requirements.cu118.txt
