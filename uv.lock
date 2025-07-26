@@ -2360,6 +2360,7 @@ dependencies = [
     { name = "litserve" },
     { name = "pillow" },
     { name = "python-multipart" },
+    { name = "requests" },
     { name = "sentence-transformers" },
     { name = "torch", version = "2.6.0+cu124", source = { registry = "https://download.pytorch.org/whl/cu124" }, marker = "extra == 'extra-7-viz-api-cu122' or (extra == 'extra-7-viz-api-cpu' and extra == 'extra-7-viz-api-cu118') or (extra == 'extra-7-viz-api-cu118' and extra == 'extra-7-viz-api-cu126') or (extra == 'extra-7-viz-api-cpu' and extra != 'extra-7-viz-api-cu122' and extra == 'extra-7-viz-api-cu126')" },
     { name = "torch", version = "2.7.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'darwin' and extra == 'extra-7-viz-api-cpu') or (extra == 'extra-7-viz-api-cpu' and extra == 'extra-7-viz-api-cu118') or (extra == 'extra-7-viz-api-cpu' and extra == 'extra-7-viz-api-cu122') or (extra == 'extra-7-viz-api-cpu' and extra == 'extra-7-viz-api-cu126') or (extra == 'extra-7-viz-api-cu118' and extra == 'extra-7-viz-api-cu122') or (extra == 'extra-7-viz-api-cu118' and extra == 'extra-7-viz-api-cu126') or (extra == 'extra-7-viz-api-cu122' and extra == 'extra-7-viz-api-cu126')" },
@@ -2390,7 +2391,6 @@ dev = [
     { name = "black" },
     { name = "ipython" },
     { name = "isort" },
-    { name = "requests" },
 ]
 
 [package.metadata]
@@ -2401,6 +2401,7 @@ requires-dist = [
     { name = "litserve", specifier = ">=0.2.13" },
     { name = "pillow", specifier = ">=11.0.0" },
     { name = "python-multipart", specifier = ">=0.0.20" },
+    { name = "requests", specifier = ">=2.32.3" },
     { name = "sentence-transformers", specifier = ">=5.0.0" },
     { name = "torch", specifier = ">=2.6.0" },
     { name = "torch", marker = "extra == 'cpu'", specifier = ">=2.7.0", index = "https://download.pytorch.org/whl/cpu", conflict = { package = "viz-api", extra = "cpu" } },
@@ -2416,7 +2417,6 @@ dev = [
     { name = "black", specifier = ">=24.10.0" },
     { name = "ipython", specifier = ">=8.31.0" },
     { name = "isort", specifier = ">=5.13.2" },
-    { name = "requests", specifier = ">=2.32.3" },
 ]
 
 [[package]]
