@@ -33,21 +33,21 @@ build-122: requirements.cu122.txt
 	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-mono-1.5-api:cu12.2.2
 	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2.2 mindthemath/nomic-mono-1.5-api:cu12.2
 
-build-124: requirements.cu124.txt
-	docker build -t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.4.1 -f Dockerfile.cu124 .
-	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.4.1 mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.4
-	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.4.1 mindthemath/nomic-mono-1.5-api:cu12.4.1
-	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.4.1 mindthemath/nomic-mono-1.5-api:cu12.4
+build-126: requirements.cu126.txt
+	docker build -t mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.6.1 -f Dockerfile.cu126 .
+	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.6.1 mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.6
+	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.6.1 mindthemath/nomic-mono-1.5-api:cu12.6.1
+	docker tag mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.6.1 mindthemath/nomic-mono-1.5-api:cu12.6
 
-push-cu: build-118 build-122 build-124 tag
+push-cu: build-118 build-122 build-126 tag
 	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8.0
 	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2.2
-	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.4.1
+	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.6.1
 	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu11.8
 	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.2
-	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.4
+	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-cu12.6
 	docker push mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-gpu
-	docker push mindthemath/nomic-mono-1.5-api:cu12.4.1
+	docker push mindthemath/nomic-mono-1.5-api:cu12.6.1
 	docker push mindthemath/nomic-mono-1.5-api:cu12.2.2
 	docker push mindthemath/nomic-mono-1.5-api:cu11.8.0
 	docker push mindthemath/nomic-mono-1.5-api:cu12.4
@@ -89,7 +89,7 @@ setup-buildx:
 	docker buildx create --name multiarch-builder
 	docker buildx inspect --bootstrap
 
-requirements: requirements.api.txt requirements.cu118.txt requirements.cu122.txt requirements.cu124.txt requirements.cpu.txt
+requirements: requirements.api.txt requirements.cu118.txt requirements.cu122.txt requirements.cu126.txt requirements.cpu.txt
 
 requirements.api.txt: pyproject.toml
 	uv pip compile pyproject.toml --extra cu122 --upgrade -o requirements.api.txt
@@ -100,8 +100,8 @@ requirements.cu118.txt: pyproject.toml
 requirements.cu122.txt: pyproject.toml
 	uv pip compile pyproject.toml --extra cu122 --upgrade -o requirements.cu122.txt
 
-requirements.cu124.txt: pyproject.toml
-	uv pip compile pyproject.toml --extra cu126 --upgrade -o requirements.cu124.txt
+requirements.cu126.txt: pyproject.toml
+	uv pip compile pyproject.toml --extra cu126 --upgrade -o requirements.cu126.txt
 
 requirements.cpu.txt: pyproject.toml
 	uv pip compile pyproject.toml --extra cpu --upgrade -o requirements.cpu.txt
