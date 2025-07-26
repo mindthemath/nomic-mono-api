@@ -29,7 +29,9 @@ def resize_for_processing(image):
     """Create a thumbnail if image is too large"""
     # Check if resizing is needed
     if max(image.size) > THUMBNAIL_SIZE:
-        logger.info(f"Resizing large image from {image.size} for color processing")
+        logger.info(
+            f"Resizing large image from {image.size} to {THUMBNAIL_SIZE} for color processing"
+        )
         # Calculate proportional height
         width, height = image.size
         if width > height:

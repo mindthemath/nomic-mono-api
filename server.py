@@ -31,7 +31,7 @@ if __name__ == "__main__":
         api_path="/txt/embed",
     )
     server = ls.LitServer(
-        [img_api, stats_api, txt_api],
+        [stats_api, img_api, txt_api],
         accelerator="auto",
         track_requests=True,
         workers_per_device=WORKERS_PER_DEVICE,

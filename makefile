@@ -98,6 +98,7 @@ run-gpu: tag
 	-e WORKERS_PER_DEVICE=$(or $(WORKERS_PER_DEVICE),4) \
 	-e IMAGE_MAX_BATCH_SIZE=$(or $(IMAGE_MAX_BATCH_SIZE),64) \
 	-e TEXT_MAX_BATCH_SIZE=$(or $(TEXT_MAX_BATCH_SIZE),64) \
+	-e THUMBNAIL_SIZE=$(or $(THUMBNAIL_SIZE),512) \
 	-e LOG_LEVEL=$(or $(LOG_LEVEL),INFO) \
 	-e PORT=8000 \
 	mindthemath/nomic-mono-1.5-api:gpu
@@ -106,6 +107,7 @@ run-cpu: build
 	docker run --rm -ti \
 	--name nomic-mono-api-cpu \
 	-p 8000:8000 \
+	-e LOG_LEVEL=$(or $(LOG_LEVEL),INFO) \
 	nomic-mono-1.5-api:latest
 
 setup-buildx:
