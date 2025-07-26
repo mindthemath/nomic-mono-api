@@ -116,14 +116,14 @@ setup-buildx:
 
 requirements: requirements.cu118.txt requirements.cu122.txt requirements.cu126.txt requirements.cpu.txt
 
-requirements.cu118.txt: pyproject.toml
+requirements.cu118.txt: pyproject.toml uv.lock
 	uv pip compile pyproject.toml --extra cu118 --upgrade -o requirements.cu118.txt
 
-requirements.cu122.txt: pyproject.toml
+requirements.cu122.txt: pyproject.toml uv.lock
 	uv pip compile pyproject.toml --extra cu122 --upgrade -o requirements.cu122.txt
 
-requirements.cu126.txt: pyproject.toml
+requirements.cu126.txt: pyproject.toml uv.lock
 	uv pip compile pyproject.toml --extra cu126 --upgrade -o requirements.cu126.txt
 
-requirements.cpu.txt: pyproject.toml
+requirements.cpu.txt: pyproject.toml uv.lock
 	uv pip compile pyproject.toml --extra cpu --upgrade -o requirements.cpu.txt
