@@ -1,5 +1,5 @@
 # Change CUDA and cuDNN version here
-FROM nvidia/cuda:11.8.0-base-ubuntu22.04
+FROM nvidia/cuda:12.2.2-base-ubuntu22.04
 ARG PYTHON_VERSION=3.12
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -24,10 +24,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-COPY requirements.cu118.txt requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu118
+COPY requirements.cu122.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu124
 
-ENV HF_ENABLE_HF_TRANSFER=1
+ENV HF_HUB_ENABLE_HF_TRANSFER=1
 EXPOSE 8000
-COPY server.py /app
+
+COPY server.py api_embed.py api_stats.py api_text.py api_utils.py /app
 CMD ["python", "/app/server.py"]

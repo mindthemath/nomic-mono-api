@@ -6,7 +6,8 @@ WORKDIR /app
 COPY requirements.cpu.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
 
-ENV HF_ENABLE_HF_TRANSFER=1
+ENV HF_HUB_ENABLE_HF_TRANSFER=1
 EXPOSE 8000
-COPY server.py /app
+
+COPY server.py api_embed.py api_stats.py api_text.py api_utils.py /app
 CMD ["python", "/app/server.py"]

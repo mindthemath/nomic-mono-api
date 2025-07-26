@@ -1,0 +1,19 @@
+FROM python:3.12.10-slim-bullseye
+ENV DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /app
+
+COPY requirements.cpu.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
+
+ENV HF_HUB_ENABLE_HF_TRANSFER=1
+EXPOSE 8000
+
+RUN python -c "from transformers import AutoImageProcessor, AutoModel; \
+    AutoImageProcessor.from_pretrained('nomic-ai/nomic-embed-vision-v1.5'); \
+    AutoModel.from_pretrained('nomic-ai/nomic-embed-vision-v1.5', trust_remote_code=True); \
+    from sentence_transformers import SentenceTransformer; \
+    SentenceTransformer('nomic-ai/nomic-embed-text-v1.5', trust_remote_code=True);"
+
+COPY server.py api_embed.py api_stats.py api_text.py api_utils.py /app
+CMD ["python", "/app/server.py"]
