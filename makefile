@@ -64,7 +64,7 @@ push-cu: lint build-118 build-122 build-126 tag
 	docker push mindthemath/nomic-mono-1.5-api:cu12.6.1
 	docker push mindthemath/nomic-mono-1.5-api:cu12.2.2
 	docker push mindthemath/nomic-mono-1.5-api:cu11.8.0
-	docker push mindthemath/nomic-mono-1.5-api:cu12.4
+	docker push mindthemath/nomic-mono-1.5-api:cu12.6
 	docker push mindthemath/nomic-mono-1.5-api:cu12.2
 	docker push mindthemath/nomic-mono-1.5-api:cu11.8
 	docker push mindthemath/nomic-mono-1.5-api:gpu
