@@ -14,6 +14,7 @@ ptest: snowman.png
 lint:
 	uvx black .
 	uvx isort --profile black .
+	uvx ruff check . --fix
 
 tag: build
 	docker tag nomic-mono-1.5-api:latest mindthemath/nomic-mono-1.5-api:$$(date +%Y%m%d)-gpu
