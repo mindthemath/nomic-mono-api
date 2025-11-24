@@ -33,7 +33,12 @@ class NomicTextAPI(ls.LitAPI):
         logger.info("Text model setup complete.")
 
     def decode_request(self, request):
-        return self.prefix + np.asarray(request["input"])
+        prefix = request.get("prefix", self.prefix).strip()
+        if not prefix.endswith(":"):
+            prefix += ":"
+            logger.info("appended missing separator (':')")
+        logger.info(f"Processing with prefix='{prefix}'")
+        return prefix + " " + np.asarray(request["input"])
 
     def predict(self, inputs):
         embeddings = self.model.encode(inputs)
